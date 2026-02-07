@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import { storage } from "../../../server/storage.js";
-import { dbEnabled } from "../../../server/db.js";
+import { storage } from "../../server/storage.js";
+import { dbEnabled } from "../../server/db.js";
 
 const STATUSES = ["Applied", "Phone Screen", "Interviewing", "Offer", "Rejected"];
 const DEFAULT_INTERVIEW_ROUND = 1;
