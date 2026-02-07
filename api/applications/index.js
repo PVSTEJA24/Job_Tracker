@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { storage } from "../../server/storage.js";
-import { dbEnabled } from "../../server/db.js"
+import { dbEnabled } from "../../server/db.js";
+import { getJson } from "../_utils.js";
 
 const STATUSES = ["Applied", "Phone Screen", "Interviewing", "Offer", "Rejected"];
 const DEFAULT_INTERVIEW_ROUND = 1;
@@ -27,7 +28,7 @@ export default async function handler(req, res) {
     return res.status(200).json(data);
   }
   if (req.method === "POST") {
-    const { company, role, source, portalUrl, loginId, loginNotes, status, notes, appliedDate, interviewRound } = req.body || {};
+    const { company, role, source, portalUrl, loginId, loginNotes, status, notes, appliedDate, interviewRound } = await getJson(req);
     if (!company || !role) return res.status(400).json({ error: "company and role are required" });
     const safeStatus = STATUSES.includes(status) ? status : STATUSES[0];
     const payload = {

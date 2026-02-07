@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { storage } from "../../server/storage.js";
 import { dbEnabled } from "../../server/db.js";
+import { getJson, getIdParam } from "../_utils.js";
 
 const STATUSES = ["Applied", "Phone Screen", "Interviewing", "Offer", "Rejected"];
 const DEFAULT_INTERVIEW_ROUND = 1;
@@ -22,10 +23,10 @@ function getUserId(req) {
 export default async function handler(req, res) {
   const userId = getUserId(req);
   if (dbEnabled() && !userId) return res.status(401).json({ error: "missing or invalid token" });
-  const { id } = req.query;
+  const id = getIdParam(req);
   if (!id) return res.status(400).json({ error: "missing id" });
   if (req.method === "PATCH") {
-    const updates = req.body || {};
+    const updates = await getJson(req);
     if (updates.status && !STATUSES.includes(updates.status)) {
       return res.status(400).json({ error: "invalid status" });
     }

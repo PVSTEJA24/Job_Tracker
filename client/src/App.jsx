@@ -48,6 +48,9 @@ function useApplications(token) {
     });
     if (!res.ok) {
       const msg = await safeError(res);
+      if (res.status === 401) {
+        setAuthError("Login required to update status");
+      }
       throw new Error(msg || "Failed to update");
     }
     const next = await res.json();
@@ -281,8 +284,13 @@ function Column({ title, items, onStatusChange, onRoundChange, onDelete }) {
 
 async function safeError(res) {
   try {
-    const data = await res.json();
+    const copy = res.clone();
+    const data = await copy.json();
     if (data && typeof data.error === "string") return data.error;
+  } catch {}
+  try {
+    const text = await res.text();
+    return text || "";
   } catch {}
   return "";
 }
@@ -323,7 +331,12 @@ export default function App() {
     }
   }
   async function handleRound(id, round) {
-    await updateApplication(id, { interviewRound: round });
+    try {
+      await updateApplication(id, { interviewRound: round });
+    } catch (e) {
+      console.error(e);
+      alert(e.message || "Failed to update round");
+    }
   }
 
   async function handleDelete(id) {
