@@ -46,7 +46,10 @@ function useApplications(token) {
       headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
       body: JSON.stringify(updates),
     });
-    if (!res.ok) throw new Error("Failed to update");
+    if (!res.ok) {
+      const msg = await safeError(res);
+      throw new Error(msg || "Failed to update");
+    }
     const next = await res.json();
     setItems((prev) => prev.map((x) => (x.id === id ? next : x)));
   }
@@ -312,7 +315,12 @@ export default function App() {
   }
 
   async function handleStatus(id, status) {
-    await updateApplication(id, { status });
+    try {
+      await updateApplication(id, { status });
+    } catch (e) {
+      console.error(e);
+      alert(e.message || "Failed to update status");
+    }
   }
   async function handleRound(id, round) {
     await updateApplication(id, { interviewRound: round });
