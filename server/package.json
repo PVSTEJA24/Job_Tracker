@@ -1,0 +1,22 @@
+{
+  "name": "job-application-tracker-server",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "uuid": "^9.0.1",
+    "pg": "^8.11.3",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
